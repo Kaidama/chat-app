@@ -12,14 +12,16 @@ import {
 import withStyles from "@material-ui/core/styles/withStyles";
 import styles from "./styles";
 
-export class Signup extends Component {
+class SignupPage extends Component {
   constructor() {
     super();
     this.state = {
-      email: null,
-      pasword: null,
-      passwordConfirmation: null,
-      signupError: ""
+      formData: {
+        email: null,
+        pasword: null,
+        passwordConfirmation: null,
+        signupError: ""
+      }
     };
   }
   render() {
@@ -100,12 +102,28 @@ export class Signup extends Component {
       </main>
     );
   }
-  submitSignup = e => {
-    console.log("Submitting!");
+
+  formIsValid = () => {
+    const { password, passwordConfirmation } = this.state;
+    return password === passwordConfirmation;
   };
+
+  submitSignup = e => {
+    e.preventDefault();
+    if (!this.formIsValid) {
+      this.setState({
+        signupError: "Entered passwords do not match."
+      });
+      return;
+    }
+  };
+
   handleOnChange = (type, e) => {
     console.log(type, e);
+    const { formData } = this.state;
+    formData[e.target.name] = e.target.value;
+    this.setState({ formData });
   };
 }
 
-export default withStyles(styles)(Signup);
+export default withStyles(styles)(SignupPage);
