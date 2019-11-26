@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Link } from "react-router-dom";
+import {useAuth} from '../../Firebase/firebaseAuth'
 import {
   FormControl,
   InputLabel,
@@ -13,6 +13,7 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import styles from "./styles";
 
 const Signup = ({ history }) => {
+  const auth = useAuth()
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
   const [passwordConfirmation, setPasswordConfirmation] = useState(null);
@@ -93,43 +94,43 @@ const Signup = ({ history }) => {
     </main>
   );
 };
-class SignupPage extends Component {
-  constructor() {
-    super();
-    this.state = {
-      formData: {
-        email: null,
-        pasword: null,
-        passwordConfirmation: null,
-        signupError: ""
-      }
-    };
-  }
-  render() {
-    const { classes } = this.props;
-  }
+// class SignupPage extends Component {
+//   constructor() {
+//     super();
+//     this.state = {
+//       formData: {
+//         email: null,
+//         pasword: null,
+//         passwordConfirmation: null,
+//         signupError: ""
+//       }
+//     };
+//   }
+//   render() {
+//     const { classes } = this.props;
+//   }
 
-  formIsValid = () => {
-    const { password, passwordConfirmation } = this.state;
-    return password === passwordConfirmation;
-  };
+//   formIsValid = () => {
+//     const { password, passwordConfirmation } = this.state;
+//     return password === passwordConfirmation;
+//   };
 
-  submitSignup = e => {
-    e.preventDefault();
-    if (!this.formIsValid) {
-      this.setState({
-        signupError: "Entered passwords do not match."
-      });
-      return;
-    }
-  };
+//   submitSignup = e => {
+//     e.preventDefault();
+//     if (!this.formIsValid) {
+//       this.setState({
+//         signupError: "Entered passwords do not match."
+//       });
+//       return;
+//     }
+//   };
 
-  handleOnChange = (type, e) => {
-    console.log(type, e);
-    const { formData } = this.state;
-    formData[e.target.name] = e.target.value;
-    this.setState({ formData });
-  };
-}
+//   handleOnChange = (type, e) => {
+//     console.log(type, e);
+//     const { formData } = this.state;
+//     formData[e.target.name] = e.target.value;
+//     this.setState({ formData });
+//   };
+// }
 
-export default withStyles(styles)(SignupPage);
+// export default withStyles(styles)(SignupPage);
