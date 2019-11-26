@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import {useAuth} from '../../Firebase/firebaseAuth'
+import { useAuth } from "../../Firebase/firebaseAuth";
 import {
   FormControl,
   InputLabel,
@@ -11,17 +11,27 @@ import {
 } from "@material-ui/core";
 import withStyles from "@material-ui/core/styles/withStyles";
 import styles from "./styles";
+import Firebase from "../../Firebase/firebase";
 
 const Signup = ({ history }) => {
-  const auth = useAuth()
-  const [email, setEmail] = useState(null);
-  const [password, setPassword] = useState(null);
-  const [passwordConfirmation, setPasswordConfirmation] = useState(null);
-  const [signupError, setSignupError] = useState("");
-
-  const handleSubmit = e => {
-    e.preventDefault();
-  };
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const handleSubmit = useCallback(
+    async e => {
+      e.preventDefault();
+      const { email, password } = event.target.elements;
+      try {
+        await Firebase.auth().createUserWithEmailAndPassword(
+          email.value,
+          password.value
+        );
+        history.push("/");
+      } catch {
+        alert(error);
+      }
+    },
+    [history]
+  );
 
   return (
     <main className={classes.main}>
@@ -30,7 +40,7 @@ const Signup = ({ history }) => {
         <Typography component="h1" variant="h5">
           Sign Up!
         </Typography>
-        <form onSubmit={e => this.submitSignup} className={classes.form}>
+        <form onSubmit={e => handleSubmit} className={classes.form}>
           <FormControl required fullWidth margin="normal">
             <InputLabel htmlFor="signup-email-input">
               Enter Your Email
@@ -40,7 +50,7 @@ const Signup = ({ history }) => {
               autoComplete="email"
               autoFocus
               id="signup-email-input"
-              onChange={e => this.handleOnChange("email", e)}
+              onChange={e => setEmail(e.target.value)}
             ></Input>
           </FormControl>
 
@@ -53,20 +63,7 @@ const Signup = ({ history }) => {
               autoComplete="password"
               autoFocus
               id="signup-password-input"
-              onChange={e => this.handleOnChange("password", e)}
-            ></Input>
-          </FormControl>
-
-          <FormControl required fullWidth margin="normal">
-            <InputLabel htmlFor="signup-password-confirmation-input">
-              Confirm Your Password
-            </InputLabel>
-            <Input
-              type="confirmPassword"
-              autoComplete="confirmPassword"
-              autoFocus
-              id="signup-confirm-password-input"
-              onChange={e => this.handleOnChange("confirmPassword", e)}
+              onChange={e => setPassword(e.target.value)}
             ></Input>
           </FormControl>
           <Button
@@ -79,9 +76,9 @@ const Signup = ({ history }) => {
             Submit
           </Button>
         </form>
-        {this.state.signupError ? (
+        {signupError ? (
           <Typography className={classes.errorText} component="h5" variant="h6">
-            {this.state.signupError}
+            {setSignupError}
           </Typography>
         ) : null}
         <h5 component="h5" variant="h6" className={classes.hasAccountHeader}>
@@ -94,43 +91,5 @@ const Signup = ({ history }) => {
     </main>
   );
 };
-// class SignupPage extends Component {
-//   constructor() {
-//     super();
-//     this.state = {
-//       formData: {
-//         email: null,
-//         pasword: null,
-//         passwordConfirmation: null,
-//         signupError: ""
-//       }
-//     };
-//   }
-//   render() {
-//     const { classes } = this.props;
-//   }
 
-//   formIsValid = () => {
-//     const { password, passwordConfirmation } = this.state;
-//     return password === passwordConfirmation;
-//   };
-
-//   submitSignup = e => {
-//     e.preventDefault();
-//     if (!this.formIsValid) {
-//       this.setState({
-//         signupError: "Entered passwords do not match."
-//       });
-//       return;
-//     }
-//   };
-
-//   handleOnChange = (type, e) => {
-//     console.log(type, e);
-//     const { formData } = this.state;
-//     formData[e.target.name] = e.target.value;
-//     this.setState({ formData });
-//   };
-// }
-
-// export default withStyles(styles)(SignupPage);
+export default withStyles(styles)(SignupPage);
